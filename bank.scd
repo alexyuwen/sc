@@ -34,23 +34,33 @@ for (0, 9) {
 // Pulse slowing down
 (
 
-{
-	var notesPerSecond = Env.
+f = {
+	var env;
+	var notesPerSecond;
 
-	SinOsc.ar(freq: LFNoise0.kr(freq: notesPerSecond).range(222, 2222), mul: 0.1)
-}.play;
+	env = Env(levels: [20, 8, 8], times: [15, 9999], curve: -2);
+	notesPerSecond = EnvGen.kr(env, doneAction: 2);
+
+	SinOsc.ar(
+		freq: LFNoise0.kr(freq: notesPerSecond).range(222, 2222),
+		mul: 0.1);
+};
+
+g = {
+	b = Buffer.read(s, "C:/sc/media/Weapon Bow And Arrow Thump 01.wav");
+	PlayBuf.ar(2, b, loop: 1);
+};
+
+h = {
+//
+};
 
 )
 
-Env.asr(sustainLevel: 2, releaseTime: 10, curve: -2).plot;
-
-
-// Define a simple binary operation
 (
-{
-var sig1, sig2, binaryOp;
-sig1 = SinOsc.ar(440);
-sig2 = SinOsc.ar(220);
-binaryOp = sig1 + sig2; // Binary operation (addition)
-}.plot;
+
+f.play;
+// g.play;
+// h.play;
+
 )

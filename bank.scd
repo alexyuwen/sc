@@ -35,8 +35,6 @@ for (0, 9) {
 (
 
 {
-	var notesPerSecond = ~invertedXLine.value(start: 155, end: 5, dur: 10, mul: 0.1);
-
 	var notesPerSecond = Env.
 
 	SinOsc.ar(freq: LFNoise0.kr(freq: notesPerSecond).range(222, 2222), mul: 0.1)
@@ -44,9 +42,8 @@ for (0, 9) {
 
 )
 
-(Env.asr(attackTime: 0, sustainLevel: 20, releaseTime: 20, curve: -2).kr + 5).plot;
+Env.asr(sustainLevel: 2, releaseTime: 10, curve: -2).plot;
 
-Env.asr
 
 // Define a simple binary operation
 (

@@ -19,9 +19,9 @@
 // Use for-loop to duplicate SinOsc random notes
 (
 
-for (0, 9) {
+for (0, 6) {
 	{
-		SinOsc.ar(freq: LFNoise0.kr(freq: 1).range(222, 2222), mul: 0.1)
+		SinOsc.ar(freq: LFNoise0.kr(freq: 1).range(1999, 2222), mul: 0.1)
 	}.play;
 }
 
@@ -37,30 +37,103 @@ for (0, 9) {
 f = {
 	var env;
 	var notesPerSecond;
+	var notes;
 
-	env = Env(levels: [20, 8, 8], times: [15, 9999], curve: -2);
+	env = Env(levels: [20, 8, 8], times: [12, 9999], curve: -2);
+
 	notesPerSecond = EnvGen.kr(env, doneAction: 2);
 
-	SinOsc.ar(
+	notes = SinOsc.ar(
 		freq: LFNoise0.kr(freq: notesPerSecond).range(222, 2222),
 		mul: 0.1);
+
+	Out.ar([0, 1], notes);
+
 };
 
 g = {
-	b = Buffer.read(s, "C:/sc/media/Weapon Bow And Arrow Thump 01.wav");
-	PlayBuf.ar(2, b, loop: 1);
+	var b = Buffer.read(s, "C:/sc/media/Weapon Bow And Arrow Thump 01.wav");
+	var playBuf = PlayBuf.ar(numChannels: 2, bufnum: b, rate: 1, loop: 1);
+
+	Out.ar([0, 1], playBuf);
 };
 
 h = {
-//
+	//
 };
 
 )
 
 (
 
-f.play;
+// f.play;
 // g.play;
-// h.play;
+h.play;
 
 )
+
+
+
+
+
+
+
+s.plotTree;
+
+(
+
+// Set up synths.
+var synth = {
+	arg freq = 250;
+
+	Out.ar([0, 1], SinOsc.ar(freq));
+}.play;
+
+var b = Buffer.read(s, "C:/sc/media/Weapon Arrow Shot 01.wav");
+var playBuf = PlayBuf.ar(numChannels: 2, bufnum: b, rate: 1, loop: 1);
+
+SystemClock.sched(
+	delta: 0,
+	item: {
+		synth.set(\freq, rrand(440, 520));
+		0.2;
+	}
+);
+
+/*SystemClock.sched(
+	delta: 1,
+	item: {
+		0.2;
+	}
+);*/
+
+)
+
+
+
+// TODO: climbing stairs, quasi-random number of steps, before woman screams.
+// TITLE: What did she see?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

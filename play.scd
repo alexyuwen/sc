@@ -22,8 +22,8 @@ o.free;
 
 
 
-// Exercise: Modulate pitch range.
-// Exercise complete.
+// Exercise 1: Modulate pitch range.
+// Exercise 1 complete.
 
 s.makeWindow;
 
@@ -51,3 +51,55 @@ s.makeWindow;
 }.play;
 
 )
+
+
+
+// Exercise 2a: Modulate width of VarSaw (saw => triangle => saw => ...)
+// Exercise 2a complete.
+// Just as an extra zero is required at the beginning of each array argument of Env.new() to use loopNode, an extra zero is required at the end to use releaseNode.
+(
+
+~synth = {
+	var sig, env, envGen;
+
+	env = Env.new(
+		levels: [0, 0, 1, 0, 0],
+		times: [0, 8, 8, 0],
+		curve: [0, 0, 0, 0],
+		releaseNode: 3,
+		loopNode: 0
+	);
+
+	envGen = EnvGen.kr(env, doneAction: 0).poll;
+
+	sig = VarSaw.ar(
+		freq: 220,
+		width: envGen,
+		mul: -10.dbamp
+	);
+}.play;
+
+)
+
+
+
+// Exercise 2b: Instead of a smooth modulation of VarSaw Width, make it jump between 0.1 and 0.9 (linlin) to hear if there's any difference (I didn't hear any).
+// Exercise 2b complete.
+
+(
+
+~synth = {
+	var sig, widthGen;
+
+	widthGen = LFPulse.kr(freq: 1/4).linlin(0, 1, 0.1, 0.9).poll;
+
+	sig = VarSaw.ar(
+		freq: 220,
+		width: widthGen,
+		mul: -10.dbamp
+	);
+}.play;
+
+)
+
+s.quit;

@@ -112,6 +112,7 @@ SystemClock.sched(
 
 
 // TODO: climbing stairs, quasi-random number of steps, before woman screams.
+// TODO: try adding other pulses like heartbeats and water drops
 // TITLE: What did she see?
 
 
@@ -120,7 +121,7 @@ SystemClock.sched(
 
 
 
-
+// TODO: two speeches, played simultaneously, but without interrupting each other
 
 
 

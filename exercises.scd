@@ -102,4 +102,37 @@ s.makeWindow;
 
 )
 
+
+
+// Exercise 3: Apply sliding window to pitch cluster.  FIFO.
+// ON HOLD: Come back to this exercise after studying Patterns.
+
+(
+
+~synth = {
+	var numFreqs;
+	var freqs;
+	var pattern;
+	var sig;
+
+	numFreqs = 2;
+	freqs = Array.fill(numFreqs, {rrand(220, 440)});
+
+	pattern = Pseq.new((0..numFreqs - 1).asArray, repeats: inf);
+
+	sig = Mix(
+		freqs.collect({
+			arg freq;
+
+			SinOsc.ar(freq, mul: -12.dbamp);
+		})
+	);
+}.play;
+
+)
+
+
+
+// Exercise 4:
+
 s.quit;

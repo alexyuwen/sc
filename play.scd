@@ -1,0 +1,1 @@
+{Line.kr(start: -100, end: 100, dur: 10, doneAction: 2).lincurve(inMin: -100, inMax: 100, outMin: -100, outMax: 100).poll}.play;

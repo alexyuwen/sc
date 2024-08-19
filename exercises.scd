@@ -105,7 +105,7 @@ s.makeWindow;
 
 
 // Exercise 3: Apply sliding window to pitch cluster.  FIFO.
-// ON HOLD: Come back to this exercise after studying Patterns.
+// TODO: Come back to this exercise after studying Patterns.
 
 (
 
@@ -188,32 +188,33 @@ s.makeWindow;
 
 
 
-// Exercise 6:
-//
+// Exercise 6: Import external audio that is slightly pitched.  Use .midiratio to transpose it to other notes.  Create a stream of random notes.
+// TODO: Come back to this after learning more about Buffers and how to change PlayBuf rate argument once per loop.
+
+Buffer.freeAll;
 
 (
 
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-// Exercise X:
-//
-
-(
+b = Buffer.read(
+	server: s,
+	path: PathName(thisProcess.nowExecutingPath).parentPath +/+ "media" +/+ "Transportation Patrol Boat Honk Horn 02.wav"
+);
 
 ~synth = {
+	var bufRate;
 	var sig;
 
-	sig = SinOsc.ar;
+	bufRate = BufRateScale.kr(b);
+
+	b.bufnum.postln;
+
+	sig = PlayBuf.ar(
+		numChannels: 2,
+		bufnum: b,
+		rate: LFTri.kr(1/2).range(bufRate - 0.06 + (0.1 * b.bufnum), bufRate + 0.06 + (0.1 * b.bufnum)),
+		loop: 1,
+		doneAction: 2
+	);
 
 	sig = sig * -6.dbamp;
 }.play;

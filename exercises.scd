@@ -133,6 +133,21 @@ s.makeWindow;
 
 
 
-// Exercise 4:
+// Exercise 4: Modulate frequency according to a sine wave.
+// Exercise 4 complete.
+(
+
+~synth = {
+	var freqGen;
+	var sig;
+
+	freqGen = SinOsc.kr(freq: 1/4, phase: -pi/2).range(220, 440).poll;
+
+	sig = VarSaw.ar(freq: freqGen, width: MouseY.kr(0, 1));
+
+	sig = sig * -24.dbamp;
+}.play;
+
+)
 
 s.quit;

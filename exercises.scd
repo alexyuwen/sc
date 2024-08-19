@@ -150,4 +150,669 @@ s.makeWindow;
 
 )
 
+
+
+// Exercise 5: Random pitches inside a narrow pitch range but the pitch range moves according to an exponential curve.
+// Exercise 5 complete.
+// Sounds like a shaky voice.
+
+(
+
+~synth = {
+	var pitchWindowSize;
+	var pitchMinGen;
+	var freqGen;
+	var sig;
+
+	pitchWindowSize = 10;
+
+	pitchMinGen = EnvGen.kr(
+		envelope: Env(
+			levels: [0, 220, 880, 0],
+			times: [0, 10, 0],
+			curve: [0, 3, 0],
+			releaseNode: 2,
+			loopNode: 0
+		),
+		doneAction: 2
+	);
+
+	freqGen = LFNoise0.kr(freq: 22).range(lo: pitchMinGen, hi: pitchMinGen + pitchWindowSize);
+
+	sig = SinOsc.ar(freq: freqGen);
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise 6:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+// Exercise X:
+//
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
 s.quit;

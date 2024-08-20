@@ -206,8 +206,6 @@ b = Buffer.read(
 
 	bufRate = BufRateScale.kr(b);
 
-	b.bufnum.postln;
-
 	sig = PlayBuf.ar(
 		numChannels: 2,
 		bufnum: b,
@@ -223,6 +221,29 @@ b = Buffer.read(
 
 
 
+// 8/19/24
+// Exercise 7a: Create a stream of pitches.  Make the pitch random with probability p, and make the pitch fixed with probability (1 - p).
+// Exercise 7b: Instead of fixing a pitch, play a short external audio.
+
+(
+
+~synth = {
+	var sig;
+
+	sig = SinOsc.ar;
+
+	sig = sig * -6.dbamp;
+}.play;
+
+)
+
+
+
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -240,6 +261,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -257,6 +283,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -274,6 +305,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -291,6 +327,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -308,6 +349,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -325,6 +371,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -342,6 +393,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -359,6 +415,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -376,6 +437,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -393,6 +459,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -410,6 +481,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -427,6 +503,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -444,6 +525,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -461,6 +547,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -478,6 +569,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -495,6 +591,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -512,6 +613,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -529,6 +635,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -546,6 +657,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -563,6 +679,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -580,6 +701,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -597,6 +723,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -614,6 +745,11 @@ b = Buffer.read(
 
 
 
+
+
+
+
+// X/X/24
 // Exercise X:
 //
 
@@ -631,189 +767,19 @@ b = Buffer.read(
 
 
 
-// Exercise X:
-//
 
-(
 
-~synth = {
-	var sig;
 
-	sig = SinOsc.ar;
 
-	sig = sig * -6.dbamp;
-}.play;
 
-)
 
 
 
-// Exercise X:
-//
 
-(
 
-~synth = {
-	var sig;
 
-	sig = SinOsc.ar;
 
-	sig = sig * -6.dbamp;
-}.play;
 
-)
 
 
 
-// Exercise X:
-//
-
-(
-
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-// Exercise X:
-//
-
-(
-
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-// Exercise X:
-//
-
-(
-
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-// Exercise X:
-//
-
-(
-
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-// Exercise X:
-//
-
-(
-
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-// Exercise X:
-//
-
-(
-
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-// Exercise X:
-//
-
-(
-
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-// Exercise X:
-//
-
-(
-
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-// Exercise X:
-//
-
-(
-
-~synth = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-s.quit;

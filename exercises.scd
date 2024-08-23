@@ -224,6 +224,7 @@ b = Buffer.read(
 // 8/19/24
 // Exercise 7a: Create a stream of pitches.  Make the pitch random with probability p, and make the pitch fixed with probability (1 - p).
 // Exercise 7b: Instead of fixing a pitch, play a short external audio.
+// TODO
 
 (
 
@@ -243,21 +244,53 @@ b = Buffer.read(
 
 
 
-// X/X/24
-// Exercise X:
-//
+// 8/22/24
+// Exercise 8: Loop the ending of Dixit Dominus.
+// Exercise 8 complete.
+
+Buffer.freeAll;
+
+(
+
+~audioFilePath = PathName(thisProcess.nowExecutingPath).parentPath +/+ "media/music/Handel - Dixit Dominus - Gardiner.mp3";
+~loopLength = 4.6544;
+
+b = Buffer.readChannel(server: s, path: ~audioFilePath, startFrame: 34.3210 * s.sampleRate, numFrames: ~loopLength * s.sampleRate);
+
+)
 
 (
 
 ~synth = {
+	var rateGen;
 	var sig;
 
-	sig = SinOsc.ar;
+	rateGen = EnvGen.kr(
+		envelope: Env(
+			levels: [0, 0.midiratio, 1.4.midiratio, 0.midiratio, 0],
+			times: [0, ~loopLength, ~loopLength, 0],
+			curve: [0, -4, -2.5, 0],
+			releaseNode: 3,
+			loopNode: 0
+		),
+		doneAction: 2
+	);
+
+	sig = PlayBuf.ar(
+		numChannels: 2,
+		bufnum: b,
+		rate: rateGen,
+		loop: 1,
+		doneAction: 2,
+	);
 
 	sig = sig * -6.dbamp;
 }.play;
 
 )
+
+
+
 
 
 

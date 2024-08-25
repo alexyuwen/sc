@@ -369,7 +369,7 @@ b = Buffer.readChannel(server: s, path: ~audioFilePath, startFrame: 1.5 * s.samp
 	rateGen = EnvGen.kr(
 		envelope: Env(
 			levels: [0, -6.midiratio, 8.midiratio, 8.midiratio, 0],
-			times: [0, LFTri.kr(5).range(0.5, 1.5), LF.kr(5).range(1, 7), 0],
+			times: [0, LFNoise0.kr(5).range(0.5, 1.5), LFNoise0.kr(5).range(1, 4), 0],
 			curve: [0, 0, -2, 0],
 			releaseNode: 3,
 			loopNode: 0
@@ -398,7 +398,7 @@ b = Buffer.readChannel(server: s, path: ~audioFilePath, startFrame: 1.5 * s.samp
 
 // 8/23/24
 // Exercise 9: Play with patterns.
-// TODO
+// Exercise 9 complete.
 
 (
 
@@ -427,22 +427,51 @@ SynthDef(\synth1, {
 n = 14;
 ~harmonics = (1..n) * 100;
 ~harmonicsWeights = ((n..1) * 3.3).normalizeSum;
+~harmonicsEveryOther = (1..(n / 2).floor) * 200;
 
 ~p1 = Pseq(list: ~harmonics, repeats: inf);
 ~p2 = Prand(list: ~harmonics, repeats: inf);
-~p3 = Pxrand(list: ~harmonics, repeats: inf);
-~p4 = Pwrand(list: ~harmonics, weights: ~harmonicsWeights, repeats: inf);
+~p3 = Pxrand(list: ~harmonics, repeats: inf); // like Prand, but never repeats the same item twice
+~p4 = Pwrand(list: ~harmonics, weights: ~harmonicsWeights, repeats: inf); // Prand with weights
 ~p5 = Pshuf(list: ~harmonicsEveryOther, repeats: inf);
 
 ~p6 = Pseries(start: 300, step: 3, length: inf);
 ~p7 = Pgeom(start: 300, grow: 1.01, length: inf);
+
 ~p8 = Pwhite(lo: 300, hi: 333, length: inf);
 ~p9 = Pbrown(lo: 300, hi: 500, step: 5, length: inf);
-~p10 = Pexprand();
+~p10 = Pexprand(lo: 300, hi: 600, length: inf);
+~p11 = Plprand(lo: 300, hi: 600, length: inf);
+~p12 = Phprand(lo: 300, hi: 600, length: inf);
+
+~p13 = Pn(pattern: Pshuf(list: ~harmonicsEveryOther, repeats: 1), repeats: inf);  // Repeatedly embed a pattern.  Similar to Pseq.
+~p14 = Pfin(count: 15, pattern: ~p1);  // Limit output of a pattern to a finite count.
+~p15 = Pdup(n: 3, pattern: ~p1);  // Output values from a pattern in repeated clusters.
+
+// Output values from a function.
+~p16 = Pfunc({
+	var freq;
+
+	freq = (Scale.minor.degrees + 60).midicps.choose;
+
+	if (1.0.rand < 0.05) {
+		freq = freq * 4;
+	};
+
+	freq;
+});
+
+// Output values from a function that returns a pattern
+~p17 = Pn(
+	pattern: Plazy({
+		Pseq(list: [rrand(330, 440).postln ], repeats: [1, 3, 5].wchoose(weights: [3, 2, 1].normalize));
+	}),
+	repeats: inf
+);
 
 Pbind(
 	\instrument, \synth1,
-	\freq, ~p9,
+	\freq, ~p17,
 	\dur, 0.2,
 	\sustain, 0.2
 	).play;
@@ -457,12 +486,8 @@ Pbind(
 
 
 
-
-
-
-
-// X/X/24
-// Exercise X:
+// 8/24/24
+// Exercise 10:
 // TODO
 
 (

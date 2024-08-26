@@ -560,21 +560,68 @@ SynthDef(\mic, {
 
 
 
+
+
+
+
+
+
+
+
+
+
 // 8/X/24
 // Exercise 11: Play with control structures.
-// TODO
+// TODO: Come back after learning how to trigger gate from 1 to 0 to 1.
 
 (
 
-~sig = {
+SynthDef(\src, {
+	var foo;
+	var ampEnv;
 	var sig;
 
-	sig = SinOsc.ar;
+	ampEnv = EnvGen.kr(
+		envelope: Env.asr,
+		gate: \gate.ir(0)
+	);
 
-	sig = sig * -6.dbamp;
-}.play;
+	sig = VarSaw.ar(\freq.ir(440) + [0, 2]);
+	sig = sig * ampEnv * -12.dbamp;
+
+	Out.ar(0, sig);
+}).add;
+
+~synth = Synth(\src);
+
+r = Routine({
+	var i = 2;
+
+	while(true, {
+		i.postln;
+
+		if(
+			i.isPrime,
+			~synth.set(
+				\freq, 440 + i,
+				\gate, Impulse.kr(1)
+			)
+		);
+
+		i = i + 1;
+
+		1.wait;
+	});
+});
+
+r.play;
 
 )
+
+
+
+
+
 
 
 

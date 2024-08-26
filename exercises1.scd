@@ -549,6 +549,12 @@ SynthDef(\mic, {
 	Out.ar(\out.ir(b[0]), sig);
 }).add;
 
+)
+
+
+
+(
+
 ~synth1 = Synth(\delay);
 ~synth2 = Synth(\mic);
 
@@ -571,7 +577,7 @@ SynthDef(\mic, {
 
 
 // 8/X/24
-// Exercise 11: Play with control structures.
+// Exercise 11a: Play with control structures.
 // TODO: Come back after learning how to trigger gate from 1 to 0 to 1.
 
 (
@@ -591,6 +597,10 @@ SynthDef(\src, {
 
 	Out.ar(0, sig);
 }).add;
+
+)
+
+(
 
 ~synth = Synth(\src);
 
@@ -629,6 +639,139 @@ r.play;
 
 
 
+
+
+
+
+
+
+
+// 8/25/24
+// Exercise 11b: More control structures.
+// TODO
+
+(
+
+p = Pbrown(lo: 333, hi: 999, step: 30, length: inf);
+~foo = p.collect({
+	arg x;
+	arg values;
+
+
+
+
+});
+~foo.class.postln;
+
+
+
+~scale = Scale.chromatic('et19');
+
+SynthDef(\synth1, {
+	var ampEnv;
+	var sig;
+
+	ampEnv = EnvGen.kr(
+		envelope: Env(
+			levels: [1, 0],
+			times: [0.2]
+		),
+		doneAction: 2,
+	);
+
+	sig = VarSaw.ar(
+		freq: \freq.ir(440) + [0, 2],
+		width: 0.5
+	);
+
+	sig = sig * ampEnv * -18.dbamp;
+
+	Out.ar(0, sig);
+}).add;
+
+~synth = Synth(\synth1, [\freq: ~foo]);
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+p = Pbrown(lo: 1, hi: 2, step: 0.05);
+q = p.asStream;
+q.next;
+
+
+
+
+
+(
+
+~scale = Scale.chromatic('et12').degrees;
+
+~values = {
+	var numValues = 5;
+	var values = Array(maxSize: numValues);
+
+	p = Pbrown(lo: 1, hi: 2, step: 0.05, length: numValues);
+
+	p.do({ |x| values.add(400 * x); });
+
+	values;
+}.();
+
+~values.nearestInScale(~scale, 12);
+
+SynthDef(\fun, {
+	arg sig;
+
+	sig = VarSaw.ar(
+		freq: Pbrown(lo: 400, hi: 800, step: 25, length: inf);
+	);
+
+	sig = sig * -6.dbamp;
+
+	Out.ar(0, sig);
+}).add;
+
+~synth = Synth(\fun);
+
+)
+
+
+
+
+(
+
+
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 8/X/24
 // Exercise 12: Play with nested groups.
 // TODO
@@ -652,51 +795,7 @@ r.play;
 
 
 // 8/X/24
-// Exercise 13: If the natural numbers represent beats, then output a sound on every prime beat.
-// TODO
-
-(
-
-~sig = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-
-
-
-
-// 8/X/24
-// Exercise 14: Play with varlag.
-// TODO
-
-(
-
-~sig = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-
-
-
-
-// X/X/24
-// Exercise X:
+// Exercise 13: Play with varlag.
 // TODO
 
 (

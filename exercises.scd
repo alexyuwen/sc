@@ -464,7 +464,7 @@ n = 14;
 // Output values from a function that returns a pattern
 ~p17 = Pn(
 	pattern: Plazy({
-		Pseq(list: [rrand(330, 440).postln ], repeats: [1, 3, 5].wchoose(weights: [3, 2, 1].normalize));
+		Pseq(list: [rrand(330, 440) ], repeats: [1, 3].wchoose(weights: [9, 1].normalizeSum));
 	}),
 	repeats: inf
 );
@@ -486,8 +486,82 @@ Pbind(
 
 
 
-// 8/24/24
-// Exercise 10:
+// 8/25/24
+// Exercise 10: Add delay effect to mic input.  Practice using buses and groups.
+// TODO: Seems to work 5% of the time, without changing any code.
+
+(
+
+s.newBusAllocators;  // Clear all private buses.
+s.freeAll;  // Free all nodes (and groups).
+
+)
+
+
+
+(
+
+b = {
+	var bus0;
+	var buses;
+
+	// Written by \mic.
+	// Read by \delay.
+	bus0 = Bus.audio(s, 1);
+
+	buses = [bus0];
+}.();
+
+g = {
+	var src, fx;
+	var groups;
+
+	src = Group();
+	fx = Group();
+
+	groups = [fx, src];  // Inverse order so that array starts with the groups at the top of the node tree.
+}.();
+
+)
+
+
+
+(
+
+SynthDef(\delay, {
+	var src, fx;
+	var sig;
+
+	src = SoundIn.ar(\in.ir(b[0]));
+	fx = CombL.ar(in: src);
+	sig = src.blend(that: fx, blendFrac: 0.5);
+
+	Out.ar(\out.ir(0), sig);
+}).add;
+
+SynthDef(\mic, {
+	var sig;
+
+	// sig = In.ar(\in.kr(2));
+
+	sig = SinOsc.ar;
+
+	Out.ar(\out.ir(b[0]), sig);
+}).add;
+
+~synth1 = Synth(\delay);
+~synth2 = Synth(\mic);
+
+)
+
+
+
+
+
+
+
+// 8/X/24
+// Exercise 11: Play with control structures.
 // TODO
 
 (
@@ -508,8 +582,8 @@ Pbind(
 
 
 
-// X/X/24
-// Exercise X:
+// 8/X/24
+// Exercise 12: Play with nested groups.
 // TODO
 
 (
@@ -530,8 +604,8 @@ Pbind(
 
 
 
-// X/X/24
-// Exercise X:
+// 8/X/24
+// Exercise 13: If the natural numbers represent beats, then output a sound on every prime beat.
 // TODO
 
 (
@@ -552,30 +626,8 @@ Pbind(
 
 
 
-// X/X/24
-// Exercise X:
-// TODO
-
-(
-
-~sig = {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = sig * -6.dbamp;
-}.play;
-
-)
-
-
-
-
-
-
-
-// X/X/24
-// Exercise X:
+// 8/X/24
+// Exercise 14: Play with varlag.
 // TODO
 
 (

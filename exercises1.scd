@@ -191,18 +191,26 @@ s.makeWindow;
 // Exercise 6: Import external audio that is slightly pitched.  Use .midiratio to transpose it to other notes.  Create a stream of random notes.
 // TODO: Come back to this after learning more about Buffers and how to change PlayBuf rate argument once per loop.
 
+Buffer.freeAll;
+
 (
 
 b = Buffer.read(
 	server: s,
-	path: PathName(thisProcess.nowExecutingPath).parentPath +/+ "media" +/+ "Transportation Patrol Boat Honk Horn 02.wav"
+	path: PathName(thisProcess.nowExecutingPath).parentPath +/+ "media/adobe/Transportation Patrol Boat Honk Horn 02.wav"
 );
 
-~synth = {
+)
+
+
+
+(
+
+SynthDef(\src, {
 	var bufRate;
 	var sig;
 
-	bufRate = BufRateScale.kr(b);
+	bufRate = \rate.kr(1) * BufRateScale.kr(b);
 
 	sig = PlayBuf.ar(
 		numChannels: 2,
@@ -212,10 +220,29 @@ b = Buffer.read(
 		doneAction: 2
 	);
 
+	sig = BufRd.ar(
+		numChannels: 2,
+		bufnum: b,
+		phase: Phasor.ar(
+			rate: bufRate,
+			start: 0,
+			end: BufFrames.kr(b)
+		),
+		loop: 1.0
+	);
+
 	sig = sig * -6.dbamp;
-}.play;
+
+	Out.ar(0, sig);
+}).add;
+
+~synth = Synth(\src);
 
 )
+
+
+
+
 
 
 
@@ -816,3 +843,395 @@ SynthDef(\fun, {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 8/29/24
+// Exercise 14: Use the the raindrop audio sample and changing speeds to create independent rhythmic and melodic voices.
+// TODO
+
+Buffer.freeAll;
+
+(
+
+b = Buffer.read(
+	server: s,
+	path: PathName(thisProcess.nowExecutingPath).parentPath +/+ "media/adobe/Liquid Water Drop 05.wav"
+);
+
+)
+
+
+
+(
+
+SynthDef(\src, {
+	var rateMax = \rateMax.ir(3);  // It's strange that I can't do this
+	var baseRates;
+	var buffers = ();
+	var sig = List();
+
+	baseRates = 0.024 + { exprand(0.01, 0.33) }.dup(3).sort;
+
+	baseRates.do({
+		arg base;
+
+		var multiple = base;
+		var multiples = List();
+
+		while(
+			multiple < { 3 },
+			{
+				// TODO: Add chance. The multiple may or may not be added.
+				multiples.add(multiple);
+				multiple = multiple + base;
+			}
+		);
+
+		buffers.base = multiples;
+	}).do({
+		arg base;
+
+		"hi".postln;
+		buffers.base.do({
+			arg multiples;
+
+			multiples.do({
+				arg multiple;
+
+				sig.add(
+					BufRd.ar(
+						numChannels: 2,
+						bufnum: b,
+						phase: Phasor.ar(
+							rate: multiple,
+							start: 0,
+							end: BufFrames.kr(b)
+						),
+						loop: 1
+					)
+				);
+			});
+		});
+	});
+
+	Out.ar(0, sig);
+}).add;
+
+~synth = Synth(\src);
+
+)
+
+exprand(0.1, 1)
+
+~synth.set(\rate, 0.3);  // multiples of base frequency: 0.024
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 8/30/24
+// Exercise 15: Filters.  LPF, HPF, BPF, BRF.
+// TODO
+
+(
+
+SynthDef(\src, {
+	var sigNum = \sigNum.kr;
+	var rq = \rq.kr(0.5);
+
+	var sigs = List();
+	var sig;
+
+	sig = PinkNoise.ar(mul: \amp.kr(0.3));
+
+	sigs.add(
+		LPF.ar(in: sig, freq: \freq.kr(440))
+	);
+
+	sigs.add(
+		HPF.ar(in: sig, freq: \freq.kr(440))
+	);
+
+	sigs.add(
+		BPF.ar(in: sig, freq: \freq.kr(440), rq: rq)
+	);
+
+	sigs.add(
+		BRF.ar(in: sig, freq: \freq.kr(440), rq: rq)
+	);
+
+	Out.ar(0, Select.ar(which: sigNum, array: sigs));
+}).add;
+
+)
+
+
+
+(
+
+~synth = Synth(\src);
+
+)
+
+
+~synth.set(\sigNum, 3);
+~synth.set(\amp, 0.9);
+~synth.set(\freq, 10000);
+~synth.set(\rq, 2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 8/30/24
+// Exercise 16: Play with additive synthesis by creating a function that takes number of multiples n and array weights of size n which later calls normalizeSum.
+// TODO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 8/31/24
+// Exercise 17: Play with MouseX and MouseY.
+// Exercise 17 complete.
+
+(
+
+SynthDef(\src, {
+	var rq = \rq.kr(1);
+
+	var sig;
+
+	sig = BRF.ar(
+		in: WhiteNoise.ar(mul: 0.3 ! 2),
+		freq: MouseX.kr(minval: 0, maxval: 10000).poll,
+		rq: rq
+	);
+
+	Out.ar(0, sig);
+}).add;
+
+)
+
+
+
+(
+
+~synth = Synth(\src);
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 8/31/24
+// Exercise 18: Use range-mapping to modify waveforms.
+// TODO
+
+(
+
+SynthDef(\src, {
+	var sig;
+
+	sig = sig;
+
+	Out.ar(0, sig);
+}).add;
+
+)
+
+
+
+(
+
+~synth = Synth(\src);
+
+)

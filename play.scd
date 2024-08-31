@@ -84,17 +84,16 @@ SynthDef(\src, {
 
 
 // Splay
-// TODO: How to print values of randomOffsets?  It didn't work inside the SynthDef because there, all that exists are Rand UGens.
 
 (
 
 SynthDef(\src, {
-	var baseFreq = 60.midicps;
+	arg randomOffsets;
 
-	var randomOffsets;
+	var baseFreq = 60.midicps;
 	var sig;
 
-	randomOffsets = { TRand.kr(lo: 0.01, hi: 2 * baseFreq, trig: \t_trig.kr(0)) }.dup(3);
+	randomOffsets = { TRand.kr(lo: 0.01, hi: baseFreq, trig: \t_trig.kr(0)) }.dup(3);
 
 	sig = SinOsc.ar(freq: baseFreq + randomOffsets);
 
@@ -115,16 +114,11 @@ SynthDef(\src, {
 
 )
 
+(
+
 ~synth.set(\t_trig, 1);
 
-
-
-
-
-
-
-
-
+)
 
 
 
@@ -206,18 +200,46 @@ SynthDef(\src, {
 
 
 
+// Buffers
+
+Buffer.freeAll;
+
+(
+
+// b = Buffer.read(s, "C:/sc/media/adobe/Horror Scary Human Female Scream 01.wav");
+b = Buffer.readChannel(s, "C:/sc/media/adobe/Horror Scary Human Female Scream 01.wav", channels: 0);
+
+)
 
 
-//
+
+(
+
+b.play;
+b.plot;
+b.duration;
+b.numFrames;
+b.numChannels;
+b.sampleRate;
+s.sampleRate;
+b.query;
+
+)
+
+
 
 (
 
 SynthDef(\src, {
-	var sig;
+	arg amp = 0.5;
 
-	sig = SinOsc.ar();
+	var sig = List();
 
-	sig = sig * \amp.kr(0.1);
+	{ rrand(440, 2200).lincurve(440, 2200, 440, 2200, 3) }.dup(2).do({
+		arg freq;
+
+		sig.add(SinOsc.ar(freq: freq) * amp);
+	});
 
 	Out.ar(0, sig);
 }).add;
@@ -245,6 +267,57 @@ SynthDef(\src, {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Additive synthesis
+
+(
+
+SynthDef(\src, {
+	arg freq = 440, freqOffset = 0;
+
+	var freqs;
+	var sigs;
+	var sig;
+
+	freqOffset = LFTri.kr(freq: 1/16).range(0.01, freqOffset);
+	freqs = freq + [0, freqOffset];
+
+	sigs = [
+		SinOsc.ar(freq: freqs, mul: \mul0.kr(0.2)),
+		Pulse.ar(freq: freqs, width: \width1.kr(0.5), mul: \mul1.kr(0.01)),
+		Saw.ar(freq: freqs, mul: \mul2.kr(0.01)),
+		VarSaw.ar(freq: freqs, width: \width3.kr(0.5), mul: \mul3.kr(0.01))
+	];
+
+	sig = sigs.sum;
+
+	Out.ar(0, sig);
+}).add;
+
+)
+
+(
+
+~synth = Synth(\src);
+
+)
+
+~synth.set(\freq, 700, \freqOffset, 0);
+~synth.set(\mul0, 0.0, \mul1, 0.1, \mul2, 0.0, \mul3, 0.0);
+~synth.set(\width1, 0.91, \width3, 0.4);
 
 
 

@@ -1,5 +1,5 @@
-// Exercise 1: Re-trigger an envelope at random intervals
-// TODO: Look into Impulse, Dust, and other related impulse classes.
+// Exercise 1:
+// TODO
 
 (
 

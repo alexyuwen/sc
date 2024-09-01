@@ -43,39 +43,6 @@ SynthDef(\src, {
 
 
 
-// Pan2
-
-(
-
-SynthDef(\src, {
-	var sig;
-
-	sig = SinOsc.ar;
-
-	sig = Pan2.ar(in: sig, pos: LFPulse.kr(freq: 1 / 2).range(-1, 1));
-	sig = sig * -6.dbamp;
-
-	Out.ar(0, sig);
-}).add;
-
-)
-
-
-
-(
-
-~synth = Synth(\src);
-
-)
-
-
-
-
-
-
-
-
-
 
 
 

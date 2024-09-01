@@ -1313,3 +1313,492 @@ s.waitForBoot({
 });
 
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 8/31/24
+// Exercise 19: Pan2, Balance2
+// Exercise 19 complete.
+
+(
+
+s.waitForBoot({
+
+	SynthDef(\src, {
+		var sig;
+
+		// Pan2
+		sig = SinOsc.ar(freq: 440, mul: 0.5);
+		// sig = Pan2.ar(in: sig, pos: LFNoise2.kr(1).poll);
+
+		// Balance2
+		sig = SinOsc.ar(freq: 440 + [0, 110], mul: 0.5);
+		sig = Balance2.ar(left: sig[0], right: sig[1], pos: LFNoise1.kr(1/2).poll);
+
+		Out.ar(0, sig);
+	}).add;
+
+
+
+	s.sync;
+
+
+
+	~synth = Synth(\src);
+
+})
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 8/31/24
+// Exercise 20a: lag, varlag, Lag, Lag2, Lag3
+// TODO
+
+(
+
+s.waitForBoot({
+
+	SynthDef(\src, {
+		var freq;
+		var sig;
+
+		freq = LFNoise0.kr(0.8).exprange(300, 900).lag(0.3);
+
+		sig = Saw.ar(freq: freq, mul: 0.2 ! 2);
+
+		Out.ar(0, sig);
+	}).add;
+
+
+
+	s.sync;
+
+
+
+	~synth = Synth(\src);
+
+});
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 9/1/24
+// Exercise 20b: Make frequency lag time proportional to change in frequency.
+// TODO
+
+(
+
+s.waitForBoot({
+
+	SynthDef(\src, {
+		var freq;
+		var sig;
+
+		freq = LFNoise0.kr(0.8).exprange(300, 900).lag(0.3);
+
+		sig = Saw.ar(freq: freq, mul: 0.2 ! 2);
+
+		Out.ar(0, sig);
+	}).add;
+
+
+
+	s.sync;
+
+
+
+	~synth = Synth(\src);
+
+});
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 9/1/24
+// Exercise 21:
+// TODO
+
+(
+
+s.waitForBoot({
+
+	SynthDef(\src, {
+		var sig;
+
+		sig = sig;
+
+		Out.ar(0, sig);
+	}).add;
+
+
+
+	s.sync;
+
+
+
+	~synth = Synth(\src);
+
+});
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 9/1/24
+// Exercise 21:
+// TODO
+
+(
+
+s.waitForBoot({
+
+	SynthDef(\src, {
+		var sig;
+
+		sig = sig;
+
+		Out.ar(0, sig);
+	}).add;
+
+
+
+	s.sync;
+
+
+
+	~synth = Synth(\src);
+
+});
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 9/1/24
+// Exercise 21:
+// TODO
+
+(
+
+s.waitForBoot({
+
+	SynthDef(\src, {
+		var sig;
+
+		sig = sig;
+
+		Out.ar(0, sig);
+	}).add;
+
+
+
+	s.sync;
+
+
+
+	~synth = Synth(\src);
+
+});
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 9/1/24
+// Exercise 21:
+// TODO
+
+(
+
+s.waitForBoot({
+
+	SynthDef(\src, {
+		var sig;
+
+		sig = sig;
+
+		Out.ar(0, sig);
+	}).add;
+
+
+
+	s.sync;
+
+
+
+	~synth = Synth(\src);
+
+});
+
+)

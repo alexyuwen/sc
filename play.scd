@@ -337,22 +337,37 @@ SynthDef(\src, {
 
 (
 
-SynthDef(\src, {
-	var sig;
+Routine({
 
-	sig = SinOsc.ar();
+	SynthDef(\src, {
+		var ampEnv;
+		var sig;
 
-	sig = sig * \amp.kr(0.1);
+		ampEnv = EnvGen.kr(
+			envelope: Env(
+				levels: [0, 1, 0.1, 1, 0],
+				times: [0, 1, 1, 0],
+				curve: [0, -11, 11, 0],
+				releaseNode: 3,
+				loopNode: 0
+			)
+		);
 
-	Out.ar(0, sig);
-}).add;
+		sig = SinOsc.ar(freq: ampEnv.linexp(0, 1, 300, 9000));
 
-)
+		sig = sig * 0.3;
+
+		Out.ar(0, sig);
+	}).add;
 
 
 
-(
+	s.sync;
 
-~synth = Synth(\src);
+
+
+	~synth = Synth(\src);
+
+}).();
 
 )

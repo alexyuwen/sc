@@ -775,11 +775,11 @@ SynthDef(\fun, {
 
 
 
-(
 
 
 
-)
+
+
 
 
 
@@ -814,6 +814,32 @@ SynthDef(\fun, {
 }.play;
 
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -922,7 +948,6 @@ SynthDef(\src, {
 	}).do({
 		arg base;
 
-		"hi".postln;
 		buffers.base.do({
 			arg multiples;
 
@@ -951,8 +976,6 @@ SynthDef(\src, {
 ~synth = Synth(\src);
 
 )
-
-exprand(0.1, 1)
 
 ~synth.set(\rate, 0.3);  // multiples of base frequency: 0.024
 
@@ -1088,10 +1111,30 @@ SynthDef(\src, {
 
 
 // 8/30/24
-// Exercise 16: Play with additive synthesis by creating a function that takes number of multiples n and array weights of size n which later calls normalizeSum.
-// TODO
+// Exercise 16: Play with additive synthesis by creating a function that takes number of multiples n and array weights of size n with normalizeSum.
+// TODO: Come back after learning about Mix and alternative approaches.
+{Blip.ar(freq: 100, numharm: 15)}.play;
 
+(
 
+n = 10;
+
+f = {
+	arg freq;
+
+	SinOsc.ar(freq: freq);
+};
+
+~baseFreq = 200;
+
+~weights = (1 ! n).normalizeSum; // Does this need to be normalized if each multiple is played by a different Synth?
+~weights.do({
+	arg weight, i;
+
+	{SinOsc.ar(freq: ~baseFreq * (i + 1), mul: weight)}.play;
+});
+
+)
 
 
 
@@ -1213,25 +1256,60 @@ SynthDef(\src, {
 
 
 // 8/31/24
-// Exercise 18: Use range-mapping to modify waveforms.
-// TODO
+// Exercise 18: Use range-mapping to modify waveforms.  Do frequency modulation such that lower freqs have higher amplitude.
+// Exercise 18 complete.
 
 (
 
-SynthDef(\src, {
-	var sig;
+s.waitForBoot({
 
-	sig = sig;
+	SynthDef(\test, {
+		var freq = \freq.kr(440);
+		var curve;
+		var sig;
 
-	Out.ar(0, sig);
-}).add;
+		curve = MouseX.kr(-10, 10);
 
-)
+		sig = SinOsc.ar(freq: freq + [0, 0]).lincurve(-1, 1, -1, 1, curve);  // modified waveform
+
+		sig = sig * 0.1;
+
+		Out.ar(0, sig);
+	}).add;
+
+	SynthDef(\src, {
+		var t = 5;
+		var freq;
+		var ampEnv;
+		var sig;
+
+		freq = LFTri.kr(freq: 1/t, iphase: -1).lincurve(-1, 1, 200, 2000, 2.2);
+
+		ampEnv = EnvGen.kr(
+			envelope: Env(
+				levels: [0, 1, 0.1, 1, 0],
+				times: [0, t/2, t/2, 0],
+				curve: [0, -2.2, 2.2, 0],
+				releaseNode: 3,
+				loopNode: 0
+			)
+		);
+
+		sig = SinOsc.ar(freq: freq + [0, 0]).lincurve(-1, 1, -1, 1, 2);  // modified waveform
+
+		sig = sig * ampEnv;
+
+		Out.ar(0, sig);
+	}).add;
 
 
 
-(
+	s.sync;
 
-~synth = Synth(\src);
+
+
+	~synth = Synth(\src);
+
+});
 
 )

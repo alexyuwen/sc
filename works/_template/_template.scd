@@ -13,9 +13,7 @@ s.waitForBoot({
 	SynthDef(\src, {
 		var sig;
 
-		sig = SinOsc.ar;
-
-		sig = sig * 0.2;
+		sig = Saw.ar(mul: 0.1);
 
 		Out.ar(0, sig);
 	}).add;
@@ -28,6 +26,6 @@ s.waitForBoot({
 
 	~synth = Synth(\src);
 
-})
+});
 
 )

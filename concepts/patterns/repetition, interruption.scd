@@ -1,22 +1,30 @@
 /*
 
-
+parameters of default SynthDef: out, freq, amp, pan, gate
 
 */
 
 
 
-// Exercise 1: Pclutch
-// TODO
+// Exercise 1: Set a frequency "breakpoint".  Set two velocities: the higher one for when freq rises above the break, and the lower one for when freq is below the break.
+// TODO: If melody freq is root, double the root with sustained bass.
+// Why is there distortion when \dur is short, less than ~0.15s?
+
 
 (
 
 s.waitForBoot({
 
 	SynthDef(\src, {
-		var sig;
+		arg freq = 440;
 
-		sig = SinOsc.ar(mul: Env.linen(sustainTime: 0, releaseTime: 0.2).kr(doneAction: 2));
+		var sig;
+		var env;
+
+		env = Env.linen(sustainTime: 0.04, releaseTime: 0.16, curve: -1).kr(doneAction: 2);
+		env = Env.perc(releaseTime: 0.16, curve: -1).kr(doneAction: 2);
+
+		sig = SinOsc.ar(freq: freq, mul: env);
 
 		Out.ar(0, sig);
 	}).add;
@@ -29,6 +37,11 @@ s.waitForBoot({
 
 	Pbind(
 		\instrument, \src,
+
+		\degree, Pbrown(-5, 10, 3),
+		\scale, Scale.egyptian,
+		\root, 1,
+		\dur, 0.2
 	).play;
 
 });

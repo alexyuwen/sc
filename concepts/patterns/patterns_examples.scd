@@ -5,7 +5,7 @@
     SynthDef(\help_SPE1, { arg freq;
         var out;
         out = RLPF.ar(
-            LFSaw.ar( freq, mul: EnvGen.kr( Env.perc(releaseTime: 0.01), levelScale: 0.3, doneAction: Done.freeSelf )),
+            LFSaw.ar( freq, mul: EnvGen.kr( Env.perc(releaseTime: 12.91), levelScale: 0.3, doneAction: Done.freeSelf )),
             LFNoise1.kr(1, 36, 110).midicps,
             0.1
         );
@@ -96,7 +96,6 @@
             0.1
         ) * EnvGen.kr( Env.perc, levelScale: 0.3,
             timeScale: sustain, doneAction: Done.freeSelf );
-        //out = [out, DelayN.ar(out, 0.04, 0.04) ];
         4.do({ out = AllpassN.ar(out, 0.05, [0.05.rand, 0.05.rand], 4) });
         Out.ar( i_out, out );
     }).send(s);
@@ -769,7 +768,7 @@ SynthDef(\help_SPE7_CFString1, { arg i_out, freq = 360, gate = 1, pan, amp=0.1;
     var out, eg, fc, osc, a, b, w;
     fc = LinExp.kr(LFNoise1.kr(Rand(0.25,0.4)), -1,1,500,2000);
     osc = Mix.fill(8, { LFSaw.ar(freq * [Rand(0.99,1.01),Rand(0.99,1.01)], 0, amp) }).distort * 0.2;
-    eg = EnvGen.kr(Env.asr(1,1,1), gate, doneAction: Done.freeSelf);
+    eg = EnvGen.kr(Env.asr(1,1,100), gate, doneAction: Done.freeSelf);
     out = eg * RLPF.ar(osc, fc, 0.1);
     #a, b = out;
     Out.ar(i_out, Mix.ar(PanAz.ar(4, [a, b], [pan, pan+0.3])));
@@ -785,5 +784,5 @@ Pbind(
     \dur, 0.8,
     \octave, 3,
     \amp, 0.03
-).play; // this returns an EventStreamPlayer
+).play;
 )

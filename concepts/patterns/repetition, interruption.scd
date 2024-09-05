@@ -10,6 +10,7 @@ parameters of default SynthDef: out, freq, amp, pan, gate
 // TODO: If melody freq is root, double the root with sustained bass.
 // Why is there distortion when \dur is short, less than ~0.15s?
 
+Event.parentEvents.default
 
 (
 
@@ -35,13 +36,15 @@ s.waitForBoot({
 
 
 
+	~durP = Pif(Pkey(\degree) <= 2, 0.25, 0.12);
+
 	Pbind(
 		\instrument, \src,
 
-		\degree, Pbrown(-5, 10, 3),
+		\degree, Pbrown(-2, 10, 12),
 		\scale, Scale.egyptian,
 		\root, 1,
-		\dur, 0.2
+		\dur, ~durP
 	).play;
 
 });

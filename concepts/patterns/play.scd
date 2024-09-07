@@ -49,87 +49,99 @@ s.waitForBoot({
 
 
 
-	e = (
-		neumeCount: 0,
-		iPrev: -1
-	);
-
 	t = TempoClock(60/60);
 
-	~fsm = Pfsm([
-		#[0],
+	~r = p{
+		var i = 0;
+		var randomIndices = Pxrand([0, 1, 2], inf).asStream;
+		var indices = [0, 1, 2];
+		var segments = [
+			[0, 2, 2, 1],
+			[0, 0, 1, 2],
+			[0, -3, 0, -1]
+		];
+		var segment2Count;
+		var randNum;
+		var segmentsCount;
 
-		// state 0
-		Pdup(2, Pseq([0, 2, 2, 1])),
-		#[1, 2],
+		segments = segments.collect({ |x| x.dupEach(2); });
 
-		// state 1
-		Pdup(2, Pseq([0, 0, 1, 2])),
-		#[0, 2],
+		inf.do({
 
-		// state 2
-		Pdup(2, Pseq([0, -3, 0, -1])),
-		#[3],
+			segment2Count = 0;
+			randNum = rrand(1, 3);
+			segmentsCount = 0;
 
-		// state 3
-		Pseq([0]) ++ Pn(\rest, 7),
-		#[0, 1, 2],
+			while(
+				{ segment2Count < randNum && segmentsCount < 9 },
+				{
+					i = randomIndices.next;
+					i.postln;
 
-		// terminal state
-		nil,
-		nil
-	]);
+					if(
+						i == 2,
+						{ segment2Count = segment2Count + 1; }
+					);
 
-	Plambda(
-		Ptpar([
+					segmentsCount = segmentsCount + 1;
 
-			0,
-			Pbind(
-				\instrument, \src,
+					segments[i].do({ |x| x.yield });
+				}
+			);
 
-				\amp, Env(
-					levels: [0.66, 0.28],
-					times: [3],
-					curve: -2
-				).asStream,
+			([0] ++ \rest.dup(8 * [1, 3].choose - 1)).do({ |x| x.yield });
 
-				\dur, 0.2,
-			),
+		});
 
-			1,
-			Pbind(
-				\instrument, \src,
+	};
 
-				\degree, 4,
+	Ptpar([
 
-				\amp, Env(
-					levels: [0.5, 0.15],
-					times: [2],
-					curve: -0.4
-				).asStream,
+		0,
+		Pbind(
+			\instrument, \src,
 
-				\dur, 0.301
-			),
+			\amp, Env(
+				levels: [0.66, 0.28],
+				times: [3],
+				curve: -2
+			).asStream,
 
-			3,
-			Pbind(
-				\instrument, \src,
+			\dur, 0.2,
+		),
 
-				\scale, Scale.harmonicMinor,
-				\degree, ~fsm,
+		1,
+		Pbind(
+			\instrument, \src,
 
-				\amp, Env(
-					levels: [0.5, 0.5],
-					times: [2],
-					curve: -0.4
-				).asStream,
+			\degree, 4,
 
-				\dur, 0.2 / 2
-			)
+			\amp, Env(
+				levels: [0.5, 0.15],
+				times: [2],
+				curve: -0.4
+			).asStream,
 
-		]),
+			\dur, 0.301
+		),
 
-	).play(t);
+		3,
+		Pbind(
+			\instrument, \src,
+
+			\scale, Scale.harmonicMinor,
+			\degree, ~r,
+
+			\amp, Env(
+				levels: [0.5, 0.5],
+				times: [2],
+				curve: -0.4
+			).asStream,
+
+			\dur, 0.2 / 2
+		)
+
+	]).play(t);
 
 });
 

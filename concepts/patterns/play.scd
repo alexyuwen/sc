@@ -47,192 +47,90 @@ s.waitForBoot({
 
 	s.sync;
 
+
+
+	e = (
+		neumeCount: 0,
+		iPrev: -1
+	);
+
 	t = TempoClock(60/60);
 
-	~degrees = Pxrand([
-		Pseq([0, 2, 2, 1]),
-		Pseq([0, -3, 0, -1]),
-		Pseq([0, 0, 1, 2])
-	],  2);
+	~fsm = Pfsm([
+		#[0],
 
-	~degreesDup = Pxrand([
+		// state 0
 		Pdup(2, Pseq([0, 2, 2, 1])),
+		#[1, 2],
+
+		// state 1
+		Pdup(2, Pseq([0, 0, 1, 2])),
+		#[0, 2],
+
+		// state 2
 		Pdup(2, Pseq([0, -3, 0, -1])),
-		Pdup(2, Pseq([0, 0, 1, 2]))
-	], rrand(4, 8)) ++ Pn(\rest, [1, 3].wchoose([2, 1]) * 8);
+		#[3],
 
-	Ptpar([
+		// state 3
+		Pseq([0]) ++ Pn(\rest, 7),
+		#[0, 1, 2],
 
-		0,
-		Pbind(
-			\instrument, \src,
+		// terminal state
+		nil,
+		nil
+	]);
 
-			\amp, Env(
-				levels: [0.66, 0.28],
-				times: [3],
-				curve: -2
-			).asStream,
+	Plambda(
+		Ptpar([
 
-			\dur, 0.2,
-		),
+			0,
+			Pbind(
+				\instrument, \src,
 
-		1,
-		Pbind(
-			\instrument, \src,
+				\amp, Env(
+					levels: [0.66, 0.28],
+					times: [3],
+					curve: -2
+				).asStream,
 
-			\degree, 4,
+				\dur, 0.2,
+			),
 
-			\amp, Env(
-				levels: [0.5, 0.15],
-				times: [2],
-				curve: -0.4
-			).asStream,
+			1,
+			Pbind(
+				\instrument, \src,
 
-			\dur, 0.301
-		),
+				\degree, 4,
 
-		3,
-		Pbind(
-			\instrument, \src,
+				\amp, Env(
+					levels: [0.5, 0.15],
+					times: [2],
+					curve: -0.4
+				).asStream,
 
-			\scale, Scale.harmonicMinor,
-			\degree, Pn(~degreesDup),
+				\dur, 0.301
+			),
 
-			\testKey, false,
+			3,
+			Pbind(
+				\instrument, \src,
 
-			\amp, Env(
-				levels: [0.5, 0.5],
-				times: [2],
-				curve: -0.4
-			).asStream,
+				\scale, Scale.harmonicMinor,
+				\degree, ~fsm,
 
-			\dur, 0.2 / 2
-		);
+				\amp, Env(
+					levels: [0.5, 0.5],
+					times: [2],
+					curve: -0.4
+				).asStream,
 
-	]).play(t);
+				\dur, 0.2 / 2
+			)
+
+		]),
+
+	).play(t);
 
 });
 
-)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(
-
-p = Plambda(
-    Pbind(
-        \a, Plet(\z, Pseries(0, 1, inf), Pseries(100, -1, inf)),
-        \b, Pget(\z, 0, inf) * 2
-    ).trace(key: \eventScope, prefix: "\nscope: ")
-).asStream;
-
-)
-
-p.next(());
-
-
-
-
-
-
-
-(
-
-p = Pbind(
-    \z, Pseries(0, 1, inf),
-    \a, Pseries(100, -1, inf),
-    \b, Pkey(\z) * 2
-).asStream;
-
-)
-
-p.nextN(5, ()).do(_.postln);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Plazy used to produce a sequence of pitches:
-
-(
-SynthDef(\help_sinegrain,
-    { arg out=0, freq=440, sustain=0.05;
-        var env;
-        env = EnvGen.kr(Env.perc(0.01, sustain, 0.2), doneAction: Done.freeSelf);
-        Out.ar(out, SinOsc.ar(freq, 0, env))
-    }).add;
-)
-
-(
-a = Plazy({
-    var x, y;
-    x = Array.series(rrand(2, 4), [1, 5].choose, 1);
-    x.put(x.size.rand, 8+0.1.rand2);
-    Pseq(x,1);
-});
-x = Pn(a, inf).asStream;
-
-Routine({
-    loop({
-        Synth(\help_sinegrain, [\freq, (x.next*5+70).midicps]);
-        0.13.wait;
-    })
-}).play;
-)
-
-
-// using event streams
-
-(
-a = Plazy({
-    var x, y;
-    x = Array.series(rrand(2, 4), [1, 5].choose, 1);
-    x.put(x.size.rand, 8+0.1.rand2);
-    Pbind(
-        \instrument, \help_sinegrain,
-        \dur, 0.12,
-        \degree, Pseq(x, 2)
-    )
-});
-
-Pn(a, inf).play;
 )

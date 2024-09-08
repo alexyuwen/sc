@@ -15,10 +15,12 @@ NOTES
 s.waitForBoot({
 
 	SynthDef(\src, {
-		arg out = 0, freq = 440, amp = 0.1, pan = 0, level = 0.2;
+		arg out = 0, freq = 440, amp = 0.1, pan = 0, level = 0.2, includeDouble = 1;
 
 		var env;
 		var sig;
+		var sig2;
+		var bothSigs;
 
 		env = EnvGen.kr(
 			envelope: Env.perc(
@@ -30,7 +32,7 @@ s.waitForBoot({
 			doneAction: 2
 		);
 
-		sig = Pulse.ar(freq: freq * [1, 1], width: 0.55, mul: env);
+		sig = Pulse.ar(freq: freq, width: 0.55, mul: env);
 
 		sig = RLPF.ar(
 			in: sig,
@@ -38,7 +40,23 @@ s.waitForBoot({
 			rq: 0.1
 		);
 
-		sig = Balance2.ar(sig[0], sig[1], pan);
+		sig2 = Pulse.ar(freq: freq * 2, width: 0.55, mul: env * 0.1);
+
+		sig2 = RLPF.ar(
+			in: sig2,
+			freq: freq * 2,
+			rq: 0.1
+		);
+
+		bothSigs = Balance2.ar(sig, sig2, pan);
+
+		sig = Select.ar(
+			includeDouble,
+			[
+				sig ! 2,
+				bothSigs
+			]
+		);
 
 		Out.ar(out, sig * amp);
 	}).add;
@@ -52,7 +70,7 @@ s.waitForBoot({
 	t = TempoClock(60/60);
 
 	~r = p{
-		var i = 0;
+		var randomIndex = 0;
 		var randomIndices = Pxrand([0, 1, 2], inf).asStream;
 		var indices = [0, 1, 2];
 		var segments = [
@@ -73,23 +91,81 @@ s.waitForBoot({
 			segmentsCount = 0;
 
 			while(
-				{ segment2Count < randNum && segmentsCount < 9 },
+				{ (segment2Count < randNum) && (segmentsCount < 9) },
 				{
-					i = randomIndices.next;
-					i.postln;
+					// Yield.
+					segments[randomIndex].collect({
+						arg x, i;
+						var final;
 
+						final = x;
+
+						if(
+							(segmentsCount == 0) && (0.coin) && (i < 2),
+							{ final = \rest }
+						);
+
+						final;
+					}).do({ |x| x.yield });
+
+					// Increment values.
 					if(
-						i == 2,
+						randomIndex == 2,
 						{ segment2Count = segment2Count + 1; }
 					);
 
 					segmentsCount = segmentsCount + 1;
-
-					segments[i].do({ |x| x.yield });
+					randomIndex = randomIndices.next;
 				}
 			);
 
 			([0] ++ \rest.dup(8 * [1, 3].choose - 1)).do({ |x| x.yield });
+
+		});
+
+	};
+
+	~rCopy = ~r.asStream;
+
+	~follower = p{
+		var segments = [
+			[0, 2, 2, 1],
+			[0, 0, 1, 2],
+			[0, -3, 0, -1]
+		];
+		var rValues;
+		var segmentsCount;
+		var followerValues;
+
+		inf.do({
+
+			segmentsCount = 0;
+
+			while(
+				{ true },  // TODO: Replace with boolean or int variable
+				{
+					if(
+						segmentsCount == 0,
+						{
+							followerValues = \rest.dup(8);
+						},
+						{
+							rValues = 4.collect({ ~rCopy.next });
+
+							followerValues = switch (rValues)
+							{ segments[0] } { [0, -3, 0, -1] }
+							{ segments[1] } { [0, -3, 0, -1] }
+							{ segments[2] } { [[0, 2, 2, 1], [0, 0, 1, 2]].choose };
+						}
+					);
+
+					// Yield.
+					followerValues.do({ |x| x.yield; });
+
+					// Increment values.
+					segmentsCount = segmentsCount + 1;
+				}
+			);
 
 		});
 
@@ -100,6 +176,8 @@ s.waitForBoot({
 		0,
 		Pbind(
 			\instrument, \src,
+
+			\includeDouble, 0,
 
 			\amp, Env(
 				levels: [0.66, 0.28],
@@ -113,6 +191,8 @@ s.waitForBoot({
 		1,
 		Pbind(
 			\instrument, \src,
+
+			\includeDouble, 0,
 
 			\degree, 4,
 
@@ -129,7 +209,10 @@ s.waitForBoot({
 		Pbind(
 			\instrument, \src,
 
+			\includeDouble, 0,
+
 			\scale, Scale.harmonicMinor,
+
 			\degree, ~r,
 
 			\amp, Env(

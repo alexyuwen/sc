@@ -126,7 +126,7 @@ s.makeWindow;
 
 			SinOsc.ar(freq, mul: -12.dbamp);
 		})
-	);
+	) ! 2;
 }.play;
 
 )

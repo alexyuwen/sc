@@ -67,6 +67,10 @@ s.waitForBoot({
 
 
 
+	e = (
+		playBass: false
+	);
+
 	t = TempoClock(60/60);
 
 	~r = p{
@@ -121,7 +125,11 @@ s.waitForBoot({
 			);
 
 			restSegments = \rest.dup([1, 3].choose * 8);
-			if(segmentsCount < 9, { restSegments[0] = \rest; })
+			if(
+				segment2Count == randNum,
+				e.playBass = true,
+				restSegments[0] = \rest
+			);
 
 			restSegments.do({ |x| x.yield });
 
@@ -129,60 +137,85 @@ s.waitForBoot({
 
 	};
 
-	Ptpar([
+	Penvir(
 
-		0,
-		Pbind(
-			\instrument, \src,
+		e,
 
-			\includeDouble, 0,
+		Ptpar([
 
-			\amp, Env(
-				levels: [0.66, 0.28],
-				times: [3],
-				curve: -2
-			).asStream,
+			0,
+			Pbind(
+				\instrument, \src,
 
-			\dur, 0.2,
-		),
+				\includeDouble, 0,
 
-		1,
-		Pbind(
-			\instrument, \src,
+				\amp, Env(
+					levels: [0.66, 0.28],
+					times: [3],
+					curve: -2
+				).asStream,
 
-			\includeDouble, 0,
+				\dur, 0.2,
+			),
 
-			\degree, 4,
+			1,
+			Pbind(
+				\instrument, \src,
 
-			\amp, Env(
-				levels: [0.5, 0.15],
-				times: [2],
-				curve: -0.4
-			).asStream,
+				\includeDouble, 0,
 
-			\dur, 0.301
-		),
+				\degree, 4,
 
-		3,
-		Pbind(
-			\instrument, \src,
+				\amp, Env(
+					levels: [0.5, 0.15],
+					times: [2],
+					curve: -0.4
+				).asStream,
 
-			\includeDouble, 0,
+				\dur, 0.301
+			),
 
-			\scale, Scale.harmonicMinor,
+			3,
+			Pbind(
+				\instrument, \src,
 
-			\degree, ~r,
+				\includeDouble, 0,
 
-			\amp, Env(
-				levels: [0.5, 0.5],
-				times: [2],
-				curve: -0.4
-			).asStream,
+				\scale, Scale.harmonicMinor,
 
-			\dur, 0.2 / 2
-		)
+				\degree, ~r,
 
-	]).play(t);
+				\amp, Env(
+					levels: [0.5, 0.5],
+					times: [2],
+					curve: -0.4
+				).asStream,
+
+				\dur, 0.2 / 2
+			),
+
+			3,
+			Pbind(
+				\instrument, \src,
+
+				\includeDouble, 0,
+
+				\degree, -7,
+
+				\amp, Env(
+					levels: [1, 1],
+					times: [2],
+					curve: -0.4
+				).asStream,
+
+				\dur, 0.2
+			)
+
+		]),
+
+		false
+
+	).play(t);
 
 });
 

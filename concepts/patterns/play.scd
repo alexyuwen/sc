@@ -4,7 +4,7 @@
 NOTES
 /////////
 
-- Pfunc, Prout?
+-
 
 */
 
@@ -81,6 +81,7 @@ s.waitForBoot({
 		var segment2Count;
 		var randNum;
 		var segmentsCount;
+		var restSegments;
 
 		segments = segments.collect({ |x| x.dupEach(2); });
 
@@ -119,53 +120,10 @@ s.waitForBoot({
 				}
 			);
 
-			([0] ++ \rest.dup(8 * [1, 3].choose - 1)).do({ |x| x.yield });
+			restSegments = \rest.dup([1, 3].choose * 8);
+			if(segmentsCount < 9, { restSegments[0] = \rest; })
 
-		});
-
-	};
-
-	~rCopy = ~r.asStream;
-
-	~follower = p{
-		var segments = [
-			[0, 2, 2, 1],
-			[0, 0, 1, 2],
-			[0, -3, 0, -1]
-		];
-		var rValues;
-		var segmentsCount;
-		var followerValues;
-
-		inf.do({
-
-			segmentsCount = 0;
-
-			while(
-				{ true },  // TODO: Replace with boolean or int variable
-				{
-					if(
-						segmentsCount == 0,
-						{
-							followerValues = \rest.dup(8);
-						},
-						{
-							rValues = 4.collect({ ~rCopy.next });
-
-							followerValues = switch (rValues)
-							{ segments[0] } { [0, -3, 0, -1] }
-							{ segments[1] } { [0, -3, 0, -1] }
-							{ segments[2] } { [[0, 2, 2, 1], [0, 0, 1, 2]].choose };
-						}
-					);
-
-					// Yield.
-					followerValues.do({ |x| x.yield; });
-
-					// Increment values.
-					segmentsCount = segmentsCount + 1;
-				}
-			);
+			restSegments.do({ |x| x.yield });
 
 		});
 

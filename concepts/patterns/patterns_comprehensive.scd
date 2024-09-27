@@ -1,23 +1,6 @@
-//
+// TODO: Try using \sustain on Pbind rather than a percussive envelope all the time.
 
 (
-
-var constrainDegreeToRange = {
-	arg x;
-
-	var octave;
-	var offset;
-
-	octave = case
-	{ x < -3 } { ((x + 3) / 7).floor }
-	{ x > 4 } { ((x - 4) / 7).ceil }
-	{ true } { 0 };
-
-	offset = -7 * octave;
-	offset.postln;
-
-	x + offset;
-};
 
 var text = "SuperCollider is an environment and programming language originally released in 1996 by James McCartney for real-time audio synthesis and algorithmic composition. Since then it has been evolving into a system used and further developed by both scientists and artists working with sound. It is a dynamic programming language providing a framework for acoustic research, algorithmic music, interactive programming and live coding. Originally released under the terms of the GPL-2.0-or-later in 2002, and from version 3.4 under GPL-3.0-or-later, SuperCollider is free and open-source software.";
 
@@ -63,18 +46,23 @@ var routineFunc = {
 	});
 };
 
+~phrases = (
+	p1: Pseq([4, 7, 4])
+);
+
 
 
 s.waitForBoot({
 
 	SynthDef(\src, {
-		arg freq = 440, amp = 0.4, releaseTime = 0.4, releaseCurve = -4;
+		arg freq = 440, amp = 0.4, gate = 1, releaseTime = 0.4, releaseCurve = -4;
 
 		var env;
 		var sig;
 
-		env = EnvGen.kr(
+		env = EnvGen.ar(
 			envelope: Env.perc(releaseTime: releaseTime, curve: releaseCurve),
+			gate: gate,
 			doneAction: 2
 		);
 
@@ -91,6 +79,7 @@ s.waitForBoot({
 
 	Pbind(
 		\instrument, \src,
+		// \type, Pseq([\note, \rest], inf),
 
 		\dur, 0.15,
 
@@ -111,7 +100,7 @@ s.waitForBoot({
 		// \degree, Pshuf(list: (-3..4), repeats: inf),
 		// \degree, Pwrand(list: (-3..4) ++ [11, 18, 25] ++ [7, 14, 21], weights: (8.dup(8) ++ 2.dup(3) ++ 1.dup(3)).normalizeSum, repeats: inf),
 
-		// \degree, Pseries(start: 0, step: Prand([-1, 1], inf), length: inf).collect(function: constrainDegreeToRange),
+		// \degree, Pseries(start: 0, step: Prand([-1, 1], inf), length: 10),
 
 		// \freq, Pgeom(start: 200, grow: 1.01, length: inf),
 
@@ -119,15 +108,15 @@ s.waitForBoot({
 		// \freq, Pexprand(lo: 200, hi: 800, length: inf),
 		// \degree, Pbrown(lo: -3, hi: 4, step: 2, length: inf),
 
-		// \degree, Pgbrown(),
-		// \degree, Pbeta(),
-		// \degree, Pcauchy(),
-		// \degree, Pgauss(),
-		// \degree, Phprand(),
-		// \degree, Plprand(),
-		// \degree, Pmeanrand(),
-		// \degree, Ppoisson(),
-		// \degree, Pprob(),
+		// \freq, Pgbrown(lo: 200, hi: 400, step: 0.14, length: inf),
+		// \freq, Pbeta(lo: 200, hi: 400, prob1: 0.3, prob2: 0.6, length: inf),
+		// \freq, Pcauchy(mean: 1000, spread: 10, length: inf),
+		// \degree, Pgauss(mean: 0, dev: 5, length: inf).round(4),
+		// \degree, Phprand(lo: -4, hi: 0).round,
+		// \degree, Plprand(lo: 0, hi: 4, length: inf),
+		// \degree, Pmeanrand(lo: 0, hi: 28, length: inf).round(7),
+		// \degree, Ppoisson(mean: 2, length: inf) - 3,
+		// \degree, Pprob(distribution: [0, 100, -20], lo: -4, hi: 3, length: inf).round,
 
 		// \degree, Pfunc(nextFunc: degreeFunction),
 
@@ -138,20 +127,47 @@ s.waitForBoot({
 		// \degree, Pser(list: (0..7), repeats: 13, offset: 0),
 		// \degree, Pslide(list: (-3..4).scramble, repeats: inf, len: 2, step: 1, start: 0, wrapAtEnd: true),
 		// \degree, Pwalk(list: [0, 2, 4, 6, 7, 5, 3, 1], stepPattern: -1, directionPattern: -1, startPos: 4), // The behavior of directionPattern (1 vs -1) seems inconsistent depending on whether or not stepPattern is 1 or -1
-		\degree, Place(),
-		// \degree, Ppatlace(),
-		// \degree, Ptuple(),
+		// \degree, Place(list: [[0, -1], 1], repeats: inf, offset: 0),
+
+/*		\degree, Ppatlace(
+			list: [
+				Pxrand(list: [-1, 0, 1], repeats: inf),
+				Pwrand(list: [-3, -2, 2, 3, 4], weights: [1, 2, 2, 1, 1].normalizeSum, repeats: inf)
+			],
+			repeats: inf,
+			offset: 0
+		),*/
+
+/*		\degree, Ptuple(
+			list: [
+				Pseq(list: [4, 1, 4, 0].dupEach(2) - 7, repeats: inf),
+				Pshuf(list: [0, 0, -1, -1, -2], repeats: inf)
+			],
+			repeats: inf
+		),*/
 
 
 
 		/*
 
-		Compound Patterns
+		List Pattern Embedding
+
+		*/
+
+		\degree, Pnsym(
+			pattern: Pseq(list: #[p1], repeats: inf),
+			dict: ~phrases
+		),
+
+
+
+		/*
+
+		Math on Patterns
 
 		*/
 
 		// \degree, Pseq(Prand, Prand),
-
 
 
 		\amp, 0.2,

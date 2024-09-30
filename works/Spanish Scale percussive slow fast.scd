@@ -81,25 +81,22 @@ s.waitForBoot({
 	Pbind(
 		\instrument, \src,
 
-		\dur, 0.3,
-
 		\scale, Scale.spanish,
 
-/*		\isSlow, Pseq([
+		// Alternate between two speeds.
+		\isSlow, Pseq([
 			Pn(false, 10),
 			Pn(true, 6)
 		], repeats: inf),
+
 		\dur, Pif(
 			Pkey(\isSlow),
 			0.3,
 			0.12
-		),*/
+		),
 
-		// \degree, Pwrand(list: (0 .. 7), weights: [5, 4, 3, 2, 3, 2, 4, 5].normalizeSum, repeats: inf),
-
-		\degree, Pseq([0, 2, 4, 6, 7], inf),
-
-/*		\degree1, Pxrand(list: [0, 2, 4], repeats: inf),
+		// Use Pkey to add chords on certain notes.
+		\degree1, Pxrand(list: [0, 2, 4], repeats: inf),
 		\degree, Plazy({
 			var degree1 = Pkey(\degree1);
 
@@ -108,13 +105,32 @@ s.waitForBoot({
 				degree1 + [-9, -5, -2, 0, 2, 4, 6],
 				degree1
 			);
-		}),*/
+		}),
+
+		// Generate new detune value every time the tempo changes.
+		\detune1, Pdiff(Pkey(\dur)) != 0.0,
+		\detune, Pclutch(
+			pattern: Pexprand(0.1, 75),
+			connected: Pdiff(Pkey(\dur)) |!=| 0
+		).trace,
+
+		// Slightly longer way of doing the above, but with Pgate instead of Pclutch.
+/*		\key1, Pif(
+			Pdiff(Pkey(\dur)) |!=| 0,
+			true,
+			false
+		),
+		\detune, Pgate(
+			pattern: Pexprand(0.1, 75),
+			repeats: inf,
+			key: \key1
+		).trace,*/
 
 		\amp, 0.2,
-		\releaseTime, 0.1,
+		\releaseTime, 0.12,
 		\releaseCurve, -4,
 
-		\sustain, 0.01,
+		\sustain, 0.01
 	).play;
 
 });

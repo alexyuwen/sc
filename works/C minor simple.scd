@@ -77,40 +77,28 @@ s.waitForBoot({
 			[0, 2, 2, 1],
 			[0, 0, 1, 2],
 			[0, -3, 0, -1]
-		];
+		].collect({ |x| x.dupEach(2); });
 		var segment2Count; // segment[2] count
 		var randNum;
 		var segmentsCount;
 
-		segments = segments.collect({ |x| x.dupEach(2); });
-
 		inf.do({
 
+			segmentsCount = 0;
 			segment2Count = 0;
 			randNum = rrand(1, 3); // segment2Count max
-			segmentsCount = 0;
 
 			while(
 				{ (segment2Count < randNum) && (segmentsCount < 9) },
 				{
-					// Yield.
-					segments[randomIndex].collect({
-						arg x, i;
-						var note = x;
-
-						if(
-							(segmentsCount == 0) && (0.coin) && (i < 2),
-							{ note = \rest }
-						);
-
-						note;
-					}).do({ |x| x.yield });
-
 					// Increment values.
 					if(
 						randomIndex == 2,
 						{ segment2Count = segment2Count + 1; }
 					);
+
+					// Yield.
+					segments[randomIndex].do({ |x| x.yield });
 
 					segmentsCount = segmentsCount + 1;
 					randomIndex = randomIndices.next;

@@ -69,58 +69,60 @@ s.waitForBoot({
 
 	t = TempoClock(60/60);
 
-	// TODO: Try to break up this huge Pattern.
 	~melodyNotes = Plazy({  // syntax shortcut for Plazy({}) is p{}
+		var randomIndex = 0;
+		var randomIndices = Pxrand([0, 1, 2], inf).asStream;
 		var indices = [0, 1, 2];
-		var segments = Pxrand(
-			[
-				[0, 2, 2, 1],
-				[0, 0, 1, 2],
-				[0, -3, 0, -1]
-			].collect({ |x| x.dupEach(2); }),
-			inf
-		).asStream;
-		var segment;
-		var segment2Count; // segments[2] count
+		var segments = [
+			[0, 2, 2, 1],
+			[0, 0, 1, 2],
+			[0, -3, 0, -1]
+		];
+		var segment2Count; // segment[2] count
 		var randNum;
-		var consecutiveSegmentsCount;
+		var segmentsCount;
 		var restSegments;
+
+		segments = segments.collect({ |x| x.dupEach(2); });
 
 		inf.do({
 
 			segment2Count = 0;
 			randNum = rrand(1, 3); // segment2Count max
-			consecutiveSegmentsCount = 0;
+			segmentsCount = 0;
 
 			while(
-				{ (segment2Count < randNum) && (consecutiveSegmentsCount < 9) },
+				{ (segment2Count < randNum) && (segmentsCount < 9) },
 				{
-					segment = segments.next;
-
-					// Increment values.
-					if(
-						 segment == [0, -3, 0, -1],
-						{ segment2Count = segment2Count + 1; }
-					);
-
 					// Yield.
-					segment.collect({
+					segments[randomIndex].collect({
 						arg x, i;
 						var note = x;
 
 						if(
-							(consecutiveSegmentsCount == 0) && (0.coin) && (i < 2),
+							(segmentsCount == 0) && (0.coin) && (i < 2),
 							{ note = \rest }
 						);
 
 						note;
 					}).do({ |x| x.yield });
 
-					consecutiveSegmentsCount = consecutiveSegmentsCount + 1;
+					// Increment values.
+					if(
+						randomIndex == 2,
+						{ segment2Count = segment2Count + 1; }
+					);
+
+					segmentsCount = segmentsCount + 1;
+					randomIndex = randomIndices.next;
 				}
 			);
 
 			restSegments = \rest.dup([1, 3].choose * 8);
+			if(
+				segment2Count == randNum,
+				restSegments[0] = \rest
+			);
 
 			restSegments.do({ |x| x.yield });
 

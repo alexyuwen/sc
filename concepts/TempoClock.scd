@@ -1,6 +1,6 @@
 /*
 
-
+More Pattern Techniques - Week 12 Fall 2019 MUS 499C - Intro to SuperCollider
 
 */
 

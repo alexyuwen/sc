@@ -70,38 +70,39 @@ s.waitForBoot({
 	t = TempoClock(60/60);
 
 	~melodyNotes = Plazy({  // syntax shortcut for Plazy({}) is p{}
-		var randomIndex = 0;
-		var randomIndices = Pxrand([0, 1, 2], inf).asStream;
 		var indices = [0, 1, 2];
-		var segments = [
+		var segments = Pxrand([
 			[0, 2, 2, 1],
 			[0, 0, 1, 2],
 			[0, -3, 0, -1]
-		].collect({ |x| x.dupEach(2); });
+		].collect({ |x| x.dupEach(2); }),
+		inf).asStream;
 		var segment2Count; // segment[2] count
 		var randNum;
-		var segmentsCount;
+		var consecutiveSegmentsCount;
+		var maxConsecutiveSegmentsCount = 9;
+		var segment;
 
 		inf.do({
 
-			segmentsCount = 0;
+			consecutiveSegmentsCount = 0;
 			segment2Count = 0;
 			randNum = rrand(1, 3); // segment2Count max
 
 			while(
-				{ (segment2Count < randNum) && (segmentsCount < 9) },
+				{ (segment2Count < randNum) && (consecutiveSegmentsCount < maxConsecutiveSegmentsCount) },
 				{
-					// Increment values.
+					segment = segments.next;
+
 					if(
-						randomIndex == 2,
+						segment == [0,  0, -3, -3, 0, 0, -1, -1],
 						{ segment2Count = segment2Count + 1; }
 					);
 
 					// Yield.
-					segments[randomIndex].do({ |x| x.yield });
+					segment.do({ |x| x.yield; });
 
-					segmentsCount = segmentsCount + 1;
-					randomIndex = randomIndices.next;
+					consecutiveSegmentsCount = consecutiveSegmentsCount + 1;
 				}
 			);
 

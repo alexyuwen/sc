@@ -81,7 +81,6 @@ s.waitForBoot({
 		var segment2Count; // segment[2] count
 		var randNum;
 		var segmentsCount;
-		var restSegments;
 
 		segments = segments.collect({ |x| x.dupEach(2); });
 
@@ -118,13 +117,7 @@ s.waitForBoot({
 				}
 			);
 
-			restSegments = \rest.dup([1, 3].choose * 8);
-			if(
-				segment2Count == randNum,
-				restSegments[0] = \rest
-			);
-
-			restSegments.do({ |x| x.yield });
+			([1, 3].choose * 8).do({ \rest.yield; });
 
 		});
 

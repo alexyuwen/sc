@@ -32,20 +32,20 @@ s.waitForBoot({
 			doneAction: 2
 		);
 
-		sig = Pulse.ar(freq: freq, width: 0.55, mul: env);
+		sig = Pulse.ar(freq: freq, width: 0.5, mul: env);
 
 		sig = RLPF.ar(
 			in: sig,
 			freq: freq,
-			rq: 0.1
+			rq: 0.2
 		);
 
-		sig2 = Pulse.ar(freq: freq * 2, width: 0.55, mul: env * 0.1);
+		sig2 = Pulse.ar(freq: freq * 2, width: 0.5, mul: env * 0.1);
 
 		sig2 = RLPF.ar(
 			in: sig2,
 			freq: freq * 2,
-			rq: 0.1
+			rq: 0.2
 		);
 
 		bothSigs = Balance2.ar(sig, sig2, pan);
@@ -69,18 +69,14 @@ s.waitForBoot({
 
 	t = TempoClock(50/60);
 
-	~phrases = [
-		[0, \rest, 0, 0, -3, \rest, -3, \rest],
-		[0, \rest, 2, \rest, 2, \rest, 1, \rest],
-		0.dup(8)
-	];
+
 
 	~degrees = p{
 		var p = Pfsm([
-			#[0],
-			Pseq(~phrases[0]), // state 0
+			[0],
+			Pseq([0, 1, Rest()]),
 			[1],
-			Pseq(~phrases[1]), // state 1
+			Pseq([2, Rest(), 4, -5, 2, 1]),
 			[0]
 		], inf).asStream;
 
@@ -95,13 +91,11 @@ s.waitForBoot({
 		Pbind(
 			\instrument, \src,
 
-			\melodyInfo, ~degrees,
-
 			\root, -1,
 			\scale, Scale.todi,
 
 			\degree, ~degrees,
-			\includeDouble, 1,
+			\includeDouble, 0,
 
 			\amp, 0.5,
 

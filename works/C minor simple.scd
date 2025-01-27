@@ -69,7 +69,7 @@ s.waitForBoot({
 
 	t = TempoClock(60/60);
 
-	~melodyNotes = Plazy({  // syntax shortcut for Plazy({}) is p{}
+	~melodyNotes = p{  // p{} is the same is Plazy({})
 		var indices = [0, 1, 2];
 		var segments = Pxrand([
 			[0, 2, 2, 1],
@@ -110,7 +110,7 @@ s.waitForBoot({
 
 		});
 
-	});
+	};
 
 	Ptpar([
 

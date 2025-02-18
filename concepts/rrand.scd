@@ -118,54 +118,18 @@ s.waitForBoot({
 
 
 
-	~degrees = p{
-		var p = Pfsm([
-			[0],
-			Pseq([0, 1]),
-			[1],
-			Pseq([2, 3, 4, 5, 6, 7]),
-			[0]
-		], inf).asStream;
-
-		inf.do({
-			p.yield;
-		});
-	};
-
-	~durs = p{
-		var dur = 0.25;
-
-		inf.do({
-			dur.yield;
-		});
-	};
-
-	~durs0 = Pseq([0.09], 1);
-	~durs1 = Pseq([0.18], 1);
-
 	Pbind(
 		\instrument, \src2,
 
-		\state, Pseq([1, 1, 1, 0, 0, 0, 0, 0], inf),
-
 		\root, -1,
 		\scale, Scale.harmonicMajor,
-
-		\degree, ~degrees,
+		\degree, Pseq([0, 2], inf),
 		\includeDouble, 0,
 
 		\amp, 0.5,
 
-		\dur, Pfunc {
-			arg event;
-
-			if (event[\state] == 0) {
-				~durs0.asStream.next;
-			} {
-				~durs1.asStream.next;
-			}
-		}
-	).trace.play(t);
+		\dur, Pn(pattern: Pseries(start: 0.1, step: 0.1, length: {rrand(3, 6)})), // Enclosing rrand in curly braces creates a function, which defers evaluation until the stream that plays the Pbind needs the value
+	).play(t);
 
 });
 

@@ -15,10 +15,8 @@ NOTES
 s.waitForBoot({
 
 	~path = PathName(thisProcess.nowExecutingPath).parentPath;
-	~steelDrumFile = ~path ++ "synths/steelDrum.scd";
-	~steelDrumFile.load();
-
-	~library_func.();
+	~synthFile = ~path ++ "synths/steelDrum.scd";
+	~synthFile.load();
 
 
 
@@ -31,27 +29,29 @@ s.waitForBoot({
 
 
 	~pbind1 = Pbind(
-		\instrument, \src,
+		\instrument, \steelDrum,
 
 		\root, -1,
+		\octave, 6,
 		\scale, Scale.harmonicMajor,
 		\degree, Pn(Pseq([0]), 2),
 		\includeDouble, 0,
 
-		\amp, 0.5,
+		\amp, 0.1,
 
 		\dur, 0.25
 	);
 
 	~pbind2 = Pbind(
-		\instrument, \src,
+		\instrument, \steelDrum,
 
 		\root, -1,
+		\octave, 6,
 		\scale, Scale.harmonicMajor,
 		\degree, Pseq([4], 4),
 		\includeDouble, 0,
 
-		\amp, 0.5,
+		\amp, 0.1,
 
 		\dur, 0.13
 	);

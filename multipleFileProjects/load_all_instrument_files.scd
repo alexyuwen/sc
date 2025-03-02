@@ -14,10 +14,18 @@ NOTES
 
 s.waitForBoot({
 
-	~path = PathName(thisProcess.nowExecutingPath).parentPath;
-	// TODO: load all instrument files
-	~synthFile = ~path ++ "synths/bass/rubberBand.scd";
-	~synthFile.load();
+	// Load synths
+	PathName.new(PathName(thisProcess.nowExecutingPath).parentPath ++ "synths").filesDo({
+		arg file;
+
+		if(
+			file.extension == "scd"
+		){
+			("Loading " ++ file.fullPath).postln;
+			file.fullPath.load;
+		}
+
+	});
 
 
 

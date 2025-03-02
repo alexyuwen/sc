@@ -15,7 +15,7 @@ NOTES
 s.waitForBoot({
 
 	~path = PathName(thisProcess.nowExecutingPath).parentPath;
-	~synthFile = ~path ++ "synths/steelDrum.scd";
+	~synthFile = ~path ++ "synths/percussion_pitched/steelDrum.scd";
 	~synthFile.load();
 
 
@@ -53,6 +53,7 @@ s.waitForBoot({
 
 		\degree, 4,
 		\dur, Pwhite(0.2, 0.6),
+		\detune, {rrand(-10, 10)}, // {rrand} syntax works for detune and degree, but not dur
 		\amp, 0.2,
 	);
 

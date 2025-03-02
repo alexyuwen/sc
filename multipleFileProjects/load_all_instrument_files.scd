@@ -15,7 +15,8 @@ NOTES
 s.waitForBoot({
 
 	~path = PathName(thisProcess.nowExecutingPath).parentPath;
-	~synthFile = ~path ++ "synths/percussion_pitched/steelDrum.scd";
+	// TODO: load all instrument files
+	~synthFile = ~path ++ "synths/bass/rubberBand.scd";
 	~synthFile.load();
 
 
@@ -29,7 +30,7 @@ s.waitForBoot({
 
 
 	~basePattern = Pbind(
-		\instrument, \steelDrum,
+		\instrument, \rubberBand,
 
 		\root, -1,
 		\octave, 6,

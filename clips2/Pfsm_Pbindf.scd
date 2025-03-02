@@ -118,29 +118,25 @@ s.waitForBoot({
 
 
 
-	~pbind1 = Pbind(
-		\instrument, \src2,
+	~basePattern = Pbind(
+		\instrument, \steelDrum,
 
 		\root, -1,
-		\scale, Scale.harmonicMajor,
+		\octave, 6,
+		\scale, Scale.harmonicMajor
+	);
+
+	~pbind1 = Pbindf(
+		~basePattern,
+
 		\degree, Pn(Pseq([0]), 2),
-		\includeDouble, 0,
-
-		\amp, 0.5,
-
 		\dur, 0.25
 	);
 
-	~pbind2 = Pbind(
-		\instrument, \src2,
+	~pbind2 = Pbindf(
+		~basePattern,
 
-		\root, -1,
-		\scale, Scale.harmonicMajor,
 		\degree, Pseq([4], 4),
-		\includeDouble, 0,
-
-		\amp, 0.5,
-
 		\dur, 0.13
 	);
 

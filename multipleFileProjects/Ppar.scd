@@ -39,11 +39,32 @@ s.waitForBoot({
 	~pbind1 = Pbindf(
 		~basePattern,
 
-		\degree, Pseq((0..14).mirror.drop(-1), inf),
-		\dur, 0.16
+		\degree, r{
+			inf.do({
+				(0..rrand(7, 14)).mirror.drop(-1).do({ |x| x.yield });
+			});
+		},
+		\dur, 0.08,
+		\amp, 0.1
 	);
 
-	~pbind1.play(t);
+	~pbind2 = Pbindf(
+		~basePattern,
+
+		\degree, 4,
+		\dur, Pwhite(0.2, 0.6),
+		\amp, 0.2,
+	);
+
+	~pbind3 = Pbindf(
+		~basePattern,
+
+		\note, 1,
+		\dur, Pwhite(1, 3),
+		\amp, 0.4
+	);
+
+	Ppar([~pbind1, ~pbind2, ~pbind3]).play(t);
 
 });
 

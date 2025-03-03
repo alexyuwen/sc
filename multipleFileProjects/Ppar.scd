@@ -14,9 +14,8 @@ NOTES
 
 s.waitForBoot({
 
-	~path = PathName(thisProcess.nowExecutingPath).parentPath;
-	~synthFile = ~path ++ "synths/percussion_pitched/steelDrum.scd";
-	~synthFile.load();
+	// Load synths
+	(PathName(thisProcess.nowExecutingPath).parentPath ++ "loadSynths.scd").load;
 
 
 

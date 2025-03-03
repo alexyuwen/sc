@@ -44,7 +44,7 @@ s.waitForBoot({
 
 
 	Routine({
-		var scale = Scale.minor;
+		var scale = Scale.major;
 		var degrees = Pseq((0..7).mirror.drop(-1), inf).asStream;
 		var freq;
 

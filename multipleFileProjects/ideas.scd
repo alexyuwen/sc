@@ -4,7 +4,9 @@
 NOTES
 /////////
 
--
+- TODOs:
+- grace note
+- slur (different notes on same pluck)
 
 */
 
@@ -91,7 +93,7 @@ s.waitForBoot({
 		\dur, 1 / 8
 	);
 
-	// TODO: how to do Pfsm, but with probabilities for next state?
+	// TODO: how to do Pfsm, but with probabilities for next state?  Perhaps Pwrand for determining states, combined with Pswitch
 	Pfsm([
 		#[0],
 

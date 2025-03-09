@@ -4,10 +4,6 @@
 NOTES
 /////////
 
-- TODOs:
-- grace note
-- slur (different notes on same pluck)
-
 */
 
 
@@ -35,21 +31,12 @@ s.waitForBoot({
 		\scale, Scale.new([0, 1, 4, 5, 7, 8, 10])
 	);
 
-	// TODO: Generalize the melodic patterns in all these Pbinds
-
 	~pbind1 = Pbindf(
 		~basePattern,
 
 		\degree, Pn(0, 1),
 		\dur, 1
 	);
-
-	/*	~pbind2 = Pbindf(
-	~basePattern,
-
-	\degree, Plazy({Pseq(5.collect({rrand(0, 7)}), rrand(1, 3))}), // without Plazy, the same Pseq would be repeated
-	\dur, 1 / 5
-	);*/
 
 	~pbind3 = Pbindf(
 		~basePattern,
@@ -93,34 +80,31 @@ s.waitForBoot({
 		\dur, 1 / 8
 	);
 
-	Pfsm([
-		#[0],
+	~pbinds = [~pbind1, ~pbind3, ~pbind4, ~pbind5, ~pbind6, ~pbind7, ~pbind8];
+	~indices = Pseq([0]) ++ Pwrand(list: (0..6), weights: (1 ! 7).normalizeSum, repeats: inf);
 
-		// state 0
-		~pbind1,
-		{rrand(0, 5)},
-
-		// state 1
-		~pbind3,
-		{rrand(0, 5)},
-
-		// state 2
-		~pbind4,
-		{rrand(0, 5)},
-
-		// state 3
-		~pbind5,
-		{rrand(0, 5)},
-
-		// state 4
-		~pbind6,
-		{rrand(0, 5)},
-
-		// state 5
-		~pbind7,
-		{rrand(0, 5)}
-	]).play(t);
+	// TODO: every time Pwrand ~pbind1 is chosen, it should be repeated once more.  Pdfsm?
+	Pswitch(list: ~pbinds, which: ~indices).play(t);
 
 });
 
+)
+
+// Pdfsm
+(
+p = Pdfsm(
+	[
+		Pseq( [\foo,\bar], 2 ), // essentially, the deterministic roadmap for the entire sequence of states
+		( // state 0
+			\foo : [ 1, Pseq([ 0, 1 ], 2 ) ]
+		),
+		( // state 1
+			\bar : [ 0, 3 ]
+		)
+	],
+	0,
+	1
+).asStream;
+
+20.do({ p.next.postln });
 )

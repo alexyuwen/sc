@@ -15,7 +15,7 @@ NOTES
 s.waitForBoot({
 
 	// Load synths
-	(PathName(thisProcess.nowExecutingPath).parentPath ++ "loadSynths.scd").load;
+	(PathName(thisProcess.nowExecutingPath).parentPath ++ "scripts/loadSynths.scd").load;
 
 
 

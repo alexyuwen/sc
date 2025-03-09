@@ -17,7 +17,7 @@ NOTES
 s.waitForBoot({
 
 	// Load synths
-	(PathName(thisProcess.nowExecutingPath).parentPath ++ "loadSynths.scd").load;
+	(PathName(thisProcess.nowExecutingPath).parentPath ++ "scripts/loadSynths.scd").load;
 
 
 
@@ -44,53 +44,11 @@ s.waitForBoot({
 		\dur, 1
 	);
 
-	/*	~pbind2 = Pbindf(
+	~pbind2 = Pbindf(
 	~basePattern,
 
 	\degree, Plazy({Pseq(5.collect({rrand(0, 7)}), rrand(1, 3))}), // without Plazy, the same Pseq would be repeated
 	\dur, 1 / 5
-	);*/
-
-	~pbind3 = Pbindf(
-		~basePattern,
-
-		\degree, Pseq([0, 1, -1], 1),
-		\dur, 1 / 3
-	);
-
-	~pbind4 = Pbindf(
-		~basePattern,
-
-		\degree, Pseq([0, -1, -3, -1], 1),
-		\dur, 1 / 4
-	);
-
-	~pbind5 = Pbindf(
-		~basePattern,
-
-		\degree, Pseq([0, -1, 1, -3, -1], 2),
-		\dur, 1 / 5
-	);
-
-	~pbind6 = Pbindf(
-		~basePattern,
-
-		\degree, Pseq([0, -1, 1, -3, -1, -3], 2),
-		\dur, 1 / 6
-	);
-
-	~pbind7 = Pbindf(
-		~basePattern,
-
-		\degree, Pseq([0, -1, 1, -1, 0, -3, -1], 2),
-		\dur, 1 / 7
-	);
-
-	~pbind8 = Pbindf(
-		~basePattern,
-
-		\degree, Pseq([0, -1, 1, -1, 1, -3, -1, -3], 2),
-		\dur, 1 / 8
 	);
 
 	Pfsm([
@@ -98,27 +56,11 @@ s.waitForBoot({
 
 		// state 0
 		~pbind1,
-		{rrand(0, 5)},
+		1,
 
 		// state 1
-		~pbind3,
-		{rrand(0, 5)},
-
-		// state 2
-		~pbind4,
-		{rrand(0, 5)},
-
-		// state 3
-		~pbind5,
-		{rrand(0, 5)},
-
-		// state 4
-		~pbind6,
-		{rrand(0, 5)},
-
-		// state 5
-		~pbind7,
-		{rrand(0, 5)}
+		~pbind2,
+		0
 	]).play(t);
 
 });

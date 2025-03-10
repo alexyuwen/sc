@@ -91,7 +91,7 @@ s.waitForBoot({
 	Pdfsm(
 		list: [
 			// signalStream
-			~indices.trace,
+			(Pn(0, 1) ++ Pwhite(0, 6)).trace,
 
 			// state 0
 			(

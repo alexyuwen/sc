@@ -7,6 +7,7 @@ NOTES
 - TODOs:
 - grace note
 - slur (different notes on same pluck)
+- something like Pxrand, but only certain values can't be repeated; other values can be repeated
 
 */
 
@@ -28,40 +29,23 @@ s.waitForBoot({
 	t = TempoClock(90/60);
 
 	~basePattern = Pbind(
-		\instrument, \pluck,
+		\instrument, \cheapPiano1,
 
 		\root, -1,
 		\octave, 6,
 		\scale, Scale.new([0, 1, 4, 5, 7, 8, 10])
 	);
 
-	// TODO: Generalize the melodic patterns in all these Pbinds
-
-	~pbind1 = Pbindf(
+	~pbind = Pbindf(
 		~basePattern,
 
-		\degree, Pn(0, 1),
-		\dur, 1
+		\degree, Pseq((0..14).mirror.drop(-1), inf),
+		\dur, 0.16
 	);
 
-	~pbind2 = Pbindf(
-	~basePattern,
+	~pbind.play;
 
-	\degree, Plazy({Pseq(5.collect({rrand(0, 7)}), rrand(1, 3))}), // without Plazy, the same Pseq would be repeated
-	\dur, 1 / 5
-	);
-
-	Pfsm([
-		#[0],
-
-		// state 0
-		~pbind1,
-		1,
-
-		// state 1
-		~pbind2,
-		0
-	]).play(t);
+	// TODO: Generalize the melodic patterns in all these Pbinds
 
 });
 
